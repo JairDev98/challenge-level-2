@@ -13,8 +13,8 @@ interface CreateTransactionDTO {
 }
 
 interface Todo {
-  Transaction: Array<Transaction>;
-  Balance: Balance;
+  transactions: Array<Transaction>;
+  balance: Balance;
 }
 
 class TransactionsRepository {
@@ -41,10 +41,10 @@ class TransactionsRepository {
 
     const total = income + outcome;
 
-    const Balance = { income, outcome, total };
-    const Transaction = this.transactions;
+    const balance = { income, outcome, total };
+    const { transactions } = this;
 
-    const nTodo: Todo = { Transaction, Balance };
+    const nTodo: Todo = { transactions, balance };
     return nTodo;
   }
 
