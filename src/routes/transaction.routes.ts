@@ -9,8 +9,15 @@ const transactionsRepository = new TransactionsRepository();
 
 transactionRouter.get('/', (request, response) => {
   try {
-    const list = transactionsRepository.getBalance();
-    return response.json(list);
+    const balanceList = transactionsRepository.getBalance();
+    const transactionsList = transactionsRepository.all();
+
+    const allList = [];
+
+    allList.push(transactionsList);
+    allList.push(balanceList);
+
+    return response.json(allList);
   } catch (err) {
     return response.status(400).json({ error: err.message });
   }

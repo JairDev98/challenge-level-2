@@ -12,11 +12,6 @@ interface CreateTransactionDTO {
   type: 'income' | 'outcome';
 }
 
-interface Todo {
-  transactions: Array<Transaction>;
-  balance: Balance;
-}
-
 class TransactionsRepository {
   private transactions: Transaction[];
 
@@ -28,7 +23,7 @@ class TransactionsRepository {
     return this.transactions;
   }
 
-  public getBalance(): Todo {
+  public getBalance(): Balance {
     const income = this.transactions
       .filter(transaction => transaction.type === 'income')
       .map(transactionIncome => transactionIncome.value)
@@ -39,29 +34,11 @@ class TransactionsRepository {
       .map(transactionOutcome => transactionOutcome.value)
       .reduce((total, value) => total + value, 0);
 
-    const total = income + outcome;
+    const total = income - outcome;
 
     const balance = { income, outcome, total };
-    const { transactions } = this;
 
-    const nTodo: Todo = { transactions, balance };
-    return nTodo;
-  }
-
-  public getIncome(
-    value: number,
-    type: string,
-  ): Omit<Balance, 'outcome' | 'total'> | boolean {
-    const income = this.transactions
-      .filter(transaction => transaction.type === 'income')
-      .map(transactionIncome => transactionIncome.value)
-      .reduce((total, ivalue) => total + ivalue, 0);
-
-    if (value > income && type === 'outcome') {
-      return false;
-    }
-    const nBalance = { income };
-    return nBalance;
+    return balance;
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {

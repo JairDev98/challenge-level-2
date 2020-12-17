@@ -15,10 +15,10 @@ class CreateTransactionService {
   }
 
   public execute({ title, value, type }: Request): Transaction {
-    const getIncome = this.transactionsRepository.getIncome(value, type);
+    const { total } = this.transactionsRepository.getBalance();
 
-    if (!getIncome) {
-      throw Error('string');
+    if (type === 'outcome' && value > total) {
+      throw new Error('insufficient total for outcome to be realized');
     }
 
     const transaction = this.transactionsRepository.create({
